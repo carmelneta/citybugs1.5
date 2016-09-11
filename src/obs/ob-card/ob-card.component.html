@@ -1,0 +1,21 @@
+
+<md-card>
+  <!--<img ng-src="{{ob.}}" class="md-card-image" alt="Washed Out">-->
+  <ob-image ob="$ctrl.ob"></ob-image>
+  <md-card-title>
+    <md-card-title-text>
+      <span class="md-headline">{{$ctrl.ob.title ? $ctrl.ob.title : 'title' }}</span>
+    </md-card-title-text>
+  </md-card-title>
+  <md-card-actions layout="row" layout-align="start center"> 
+    <md-button>Action 1</md-button>
+    <md-button>Action 2</md-button>
+    
+    <a ui-sref="view({obId: $ctrl.ob.$id})">
+      <md-button class="md-icon-button" aria-label="toggle"><md-icon>forward</md-icon></md-button>
+    </a>
+  </md-card-actions>
+  <md-card-content>
+    <p>{{$ctrl.ob.decr}}</p>
+  </md-card-content>
+</md-card>

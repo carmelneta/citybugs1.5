@@ -1,0 +1,32 @@
+<h1>View new ob</h1>
+
+  <md-content layout-padding>
+  <form novalidate ng-submit="$ctrl.submit()">
+
+    <md-input-container>
+      <label>Title</label>
+      <input ng-model="$ctrl.ob.title" required>
+    </md-input-container>
+
+    
+    <md-input-container class="md-block">
+      <label>Description</label>
+      <textarea ng-model="$ctrl.ob.decr" rows="1" md-select-on-focus></textarea>
+    </md-input-container>
+
+    <!--<input ng-model="$ctrl.images" type="file" multiple accept="image/*">-->
+    <file-upload model="$ctrl.images"></file-upload>
+
+    <div ng-if="$ctrl.manualPosition">
+      user device didnt access position <br>
+      TODO: manual position set
+    </div>
+    
+    <div>
+      <md-button type="submit">Submit</md-button>
+    </div>
+    <pre>{{$ctrl.ob | json}}</pre>
+    <pre>{{$ctrl.images | json}}</pre>
+    <pre>{{$ctrl.manualPosition | json}}</pre>
+  </form>
+  </md-content>

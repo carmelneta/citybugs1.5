@@ -1,0 +1,18 @@
+
+<md-toolbar>
+  <h1>CityBugs 1.5</h1>
+</md-toolbar>
+<div layout="row">
+<md-sidenav md-component-id="left" class="md-sidenav-left" md-is-open="$ctrl.leftNavOpen">
+  Left Nav!
+</md-sidenav>
+
+<md-content>
+  Center Content
+  
+  <md-button ng-click="$ctrl.leftNavOpen = !$ctrl.leftNavOpen">
+    Open Left Menu
+  </md-button>
+  
+  <ui-view></ui-view>
+</md-content>

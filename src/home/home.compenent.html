@@ -1,0 +1,7 @@
+<h1>HOME {{$ctrl.people}}</h1>
+
+<md-content class="md-padding" layout-xs="column" layout="row">
+  <div layout="column">
+    <ob-card ng-repeat="ob in $ctrl.obs" ob="ob"></ob-card>
+  </div>
+</md-content>
