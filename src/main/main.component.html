@@ -1,18 +1,56 @@
 
 <md-toolbar>
-  <h1>CityBugs 1.5</h1>
-</md-toolbar>
-<div layout="row">
-<md-sidenav md-component-id="left" class="md-sidenav-left" md-is-open="$ctrl.leftNavOpen">
-  Left Nav!
-</md-sidenav>
+  <div class="md-toolbar-tools">
+    <md-button class="md-icon-button" aria-label="Settings" ng-click="$ctrl.leftNavOpen = !$ctrl.leftNavOpen">
+      <md-icon>menu</md-icon>
+    </md-button>
 
-<md-content>
-  Center Content
+    <h2>
+      <span>CityBugs 1.5</span>
+      <span ng-show="$ctrl.isLoggedIn">Logged In</span>
+    </h2>
   
-  <md-button ng-click="$ctrl.leftNavOpen = !$ctrl.leftNavOpen">
-    Open Left Menu
-  </md-button>
-  
-  <ui-view></ui-view>
-</md-content>
+    <md-menu md-position-mode="target-right target">
+      <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon>face</md-icon>
+      </md-button>
+
+      <md-menu-content width="4" >
+        <span ng-show="$ctrl.user">
+          <md-menu-item>
+            <md-button ng-click="$ctrl.logout()">
+              <div layout="row" flex>
+                <p flex>LogOut</p>
+                <md-icon md-menu-align-target style="margin: auto 3px auto 0;">face</md-icon>
+              </div>
+            </md-button>
+          </md-menu-item>          
+        </span>
+        <span ng-hide="$ctrl.user">
+           <md-menu-item>
+            <md-button ng-click="$ctrl.logout()">
+             <a ui-sref="user.login">
+              <div layout="row" flex>
+                <p flex>Login</p>
+                <md-icon md-menu-align-target style="margin: auto 3px auto 0;">face</md-icon>
+              </div>
+            </a>
+            </md-button>
+          </md-menu-item>       
+        </span>
+      </md-menu-content>
+
+    </md-menu>
+  </div>
+</md-toolbar>
+
+<div layout="row">
+  <md-sidenav md-component-id="left" class="md-sidenav-left" md-is-open="$ctrl.leftNavOpen">
+    Left Nav!
+  </md-sidenav>
+
+  <md-content>
+    Center Content
+    <ui-view></ui-view>
+  </md-content>
+</div>

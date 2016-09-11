@@ -8,8 +8,7 @@
     </md-card-title-text>
   </md-card-title>
   <md-card-actions layout="row" layout-align="start center"> 
-    <md-button>Action 1</md-button>
-    <md-button>Action 2</md-button>
+    <md-button ng-click="$ctrl.cardClick()">Action 1</md-button>
     
     <a ui-sref="view({obId: $ctrl.ob.$id})">
       <md-button class="md-icon-button" aria-label="toggle"><md-icon>forward</md-icon></md-button>
