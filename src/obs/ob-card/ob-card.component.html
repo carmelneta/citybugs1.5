@@ -1,17 +1,17 @@
 
 <md-card>
-  <!--<img ng-src="{{ob.}}" class="md-card-image" alt="Washed Out">-->
   <ob-image ob="$ctrl.ob"></ob-image>
   <md-card-title>
     <md-card-title-text>
       <span class="md-headline">{{$ctrl.ob.title ? $ctrl.ob.title : 'title' }}</span>
     </md-card-title-text>
   </md-card-title>
-  <md-card-actions layout="row" layout-align="start center"> 
-    <md-button ng-click="$ctrl.cardClick()">Action 1</md-button>
-    
-    <a ui-sref="view({obId: $ctrl.ob.$id})">
-      <md-button class="md-icon-button" aria-label="toggle"><md-icon>forward</md-icon></md-button>
+  <md-card-actions layout="row" layout-align="start center">     
+    <md-button class="md-icon-button" aria-label="bookmark" ng-click="$ctrl.bookmark()">
+      <md-icon>bookmark</md-icon>
+    </md-button>
+    <a ui-sref="obs.view({obId: $ctrl.ob.$id})">
+      <md-button class="md-icon-button" aria-label="View"><md-icon>forward</md-icon></md-button>
     </a>
   </md-card-actions>
   <md-card-content>

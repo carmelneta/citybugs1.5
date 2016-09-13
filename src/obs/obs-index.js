@@ -8,10 +8,8 @@
       name: 'obs.view',
       url: '/view/{obId}',
       component: 'obs.view.component',
-      resolve: {
-        ob : function(obsService, $transition$) {
-          return obsService.getOb($transition$.params().obId);
-        }
+      resolve: { 
+        ob: (obsService, $transition$) => obsService.getOb( $transition$.params().obId ) 
       }
     };
 

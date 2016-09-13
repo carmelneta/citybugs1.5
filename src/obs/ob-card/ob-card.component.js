@@ -5,12 +5,13 @@
       ob : '=',
       onClick: '&'
     },
-    controller: function() {
-      console.log(this);
-       
-      this.cardClick = function() {
+    controller: function(obsService) {
+      // console.log(this);
+      var ctrl = this;
+
+      ctrl.bookmark = function() {
         // alert("asd");
-        console.log(this.onClick());
+        obsService.mark(ctrl.ob);
       }
     } 
   });
