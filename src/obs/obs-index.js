@@ -9,7 +9,8 @@
       url: '/view/{obId}',
       component: 'obs.view.component',
       resolve: { 
-        ob: (obsService, $transition$) => obsService.getOb( $transition$.params().obId ) 
+        //obId: (obsService, $transition$) => obsService.getOb( $transition$.params().obId )
+        obId: $transition$ => $transition$.params().obId
       }
     };
 
