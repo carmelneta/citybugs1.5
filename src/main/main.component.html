@@ -1,5 +1,5 @@
 
-<md-toolbar>
+<md-toolbar >
   <div class="md-toolbar-tools">
     <md-button class="md-icon-button" aria-label="Settings" ng-click="$ctrl.leftNavOpen = !$ctrl.leftNavOpen">
       <md-icon>menu</md-icon>
@@ -7,9 +7,14 @@
 
     <h2>
       <a ui-sref="home">CityBugs 1.5</a>
-      <span ng-show="$ctrl.isLoggedIn">Logged In</span>
     </h2>
   
+    <a ui-sref="obs.add">
+      <md-button aria-label="Open demo menu" class="md-icon-button">
+        <md-icon>add</md-icon>
+      </md-button>
+    </a>
+    
     <md-menu md-position-mode="target-right target">
       <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon>face</md-icon>
@@ -24,7 +29,15 @@
                 <md-icon md-menu-align-target style="margin: auto 3px auto 0;">face</md-icon>
               </div>
             </md-button>
-          </md-menu-item>          
+          </md-menu-item>         
+          
+          <md-menu-item>
+            <md-button ui-sref="obs.marked"> 
+              <div layout="row" flex>
+                <p flex>Marked Obs</p>
+              </div> 
+            </md-button>
+          </md-menu-item> 
         </span>
         <span ng-hide="$ctrl.user">
            <md-menu-item>
@@ -36,11 +49,12 @@
               </div>
             </a>
             </md-button>
-          </md-menu-item>       
+          </md-menu-item>        
         </span>
       </md-menu-content>
 
     </md-menu>
+
   </div>
 </md-toolbar>
 
@@ -49,7 +63,7 @@
     Left Nav!
   </md-sidenav>
 
-  <md-content> 
+  <md-content flex>
     <ui-view></ui-view>
   </md-content>
 </div>

@@ -1,30 +1,62 @@
-(function(angular){  
+(function(angular){
+
+  var ctrl = function(obsService, Auth, $timeout) {
+    // console.log(this);
+    var ctrl = this;
+    var utils = {
+      setListners: function() {
+
+        //  Listen for marked changes
+        obsService.isObMarkedByUser(ctrl.ob.$id).then( results => {
+
+          ctrl.obMarkByUser = results.isMarkerd;
+
+          utils.unwatch = results.obj.$watch(x =>  {
+            obsService.isObMarkedByUser(ctrl.ob.$id).then(results => ctrl.obMarkByUser = results.isMarkerd);
+          });
+
+        });
+
+        ctrl.ownByCurrent = obsService.isObOwnByCurrent(ctrl.ob);
+
+      }
+    };
+
+    ctrl.ownByCurrent = false;   
+
+    //  Mark Toggle 
+    ctrl.mark = () => obsService.mark(ctrl.ob.$id);
+    
+
+    ctrl.$onDestroy = function(){
+      if(utils.unwatch) { utils.unwatch() };
+    }
+
+    ctrl.$onInit = function() {
+      // console.log('Initing', ctrl.ob);
+
+      //  Is the NOT ob loaded allready?
+      if(!ctrl.ob) {
+        ctrl.ob = obsService.getOb(ctrl.obId);
+        ctrl.ob.$loaded().then(x => {
+          if(x.$value === null) { $timeout( () => ctrl.onEmpty() ); }
+          utils.setListners();
+        });
+      }else {
+        utils.setListners();
+      }
+    }
+
+  }
+
   angular.module('cityBugs').component( 'obCard',{
     templateUrl: 'src/obs/ob-card/ob-card.component.html',
     bindings: {
-      obId : '<',
-      onClick: '&'
+      onEmpty     : '&',
+      obId        : '<',
+      ob          : '<',
+      moreActions : '<'
     },
-    controller: function(obsService) {
-      // console.log(this);
-      var ctrl = this;
-
-      ctrl.ob = obsService.getOb(ctrl.obId);
-      //  Mark Toggle 
-      ctrl.mark = function() {
-        obsService.mark(ctrl.ob.$id);
-      };
-      return;
-      // Listen for marks changes
-      firebase.database().ref('obs/' + ctrl.ob.$id + '/marks')
-      // this.ob.$$conf.ref.child('obs/' + ctrl.ob.$id + '/marks/')
-      .on('value', function(snap) {
-        // console.log(snap.val());
-        console.log('Marks Change on: ', ctrl.ob.$id);
-        obsService.isObMarkedByUser(ctrl.ob.$id).then(
-          results => ctrl.obMarkByUser = results.isMarkerd
-        );
-      });
-    } 
+    controller: ctrl
   });
 })(window.angular);

@@ -1,38 +1,39 @@
-var app = angular.module('cityBugs', ['ui.router', 'ngMaterial', 'firebase', 'ngMessages']);
- 
+(function(angular) {
+
+  var app = angular.module('cityBugs', ['ui.router', 'ngMaterial', 'firebase', 'ngMessages']);
+    
+  app.config(function( $stateProvider ) {
+
+    var homeState = {
+      name: 'home',
+      url: '/',
+      component: 'home.component'    
+    };
+
+    var obsIndexState = {
+      name: 'obs',
+      url : '/obs',
+      component: 'obs.index'
+    }
+
+    
+    var userState = {
+      name: 'user',
+      url : '/user',
+      component: 'user.index'
+    }
 
 
-app.config(function( $stateProvider ) {
+    $stateProvider.state(homeState); 
+    $stateProvider.state(obsIndexState); 
+    $stateProvider.state(userState); 
 
-  var homeState = {
-    name: 'home',
-    url: '/',
-    component: 'home.component'    
-  };
+  });
 
-  var obsIndexState = {
-    name: 'obs',
-    url : '/obs',
-    component: 'obs.index'
-  }
-
+  app.config(function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+      .primaryPalette('pink')
+      .accentPalette('orange');
+  });
   
-  var userState = {
-    name: 'user',
-    url : '/user',
-    component: 'user.index'
-  }
-
-
-  $stateProvider.state(homeState); 
-  $stateProvider.state(obsIndexState); 
-  $stateProvider.state(userState); 
-
-});
-
-app.config(function($mdThemingProvider) {
-  $mdThemingProvider.theme('default')
-    .primaryPalette('pink')
-    .accentPalette('orange');
-});
- 
+})(window.angular);

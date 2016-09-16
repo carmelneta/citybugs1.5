@@ -1,32 +1,76 @@
-<h1>Add new ob</h1>
+<md-toolbar class="md-warn">
+  <div class="md-toolbar-tools">
+    <h2 class="md-flex">Create New Ob</h2>
+  </div>
+</md-toolbar>
 
-  <md-content layout-padding>
-  <form novalidate ng-submit="$ctrl.submit()">
+<md-content>
+  <form novalidate ng-submit="$ctrl.submit()">    
 
-    <md-input-container>
-      <label>Title</label>
-      <input ng-model="$ctrl.ob.title" required>
-    </md-input-container>
+    <md-card>    
+      <md-card-content>
+        <md-input-container>
+          <label>Title</label>
+          <input ng-model="$ctrl.ob.title" required>
+        </md-input-container>
 
+        
+        <md-input-container class="md-block">
+          <label>Description</label>
+          <textarea ng-model="$ctrl.ob.decr" rows="1" md-select-on-focus></textarea>
+        </md-input-container>
+        
+        <div layout="row" layout-align="space-between center">
+          <span>Observation type</span>
+          <md-select ng-model="$ctrl.ob.type" placeholder="Type" class="md-no-underline">
+            <md-option value="construction">Construction</md-option>
+            <md-option value="traffic">Traffic</md-option>
+            <md-option value="event">Event</md-option>
+            <md-option value="accident">Accident</md-option>
+          </md-select>
+        </div>    
+      </md-card-content>
+    </md-card>    
+
+    <file-upload 
+      on-change="$ctrl.imageChange(files)" 
+      on-del-exsist="$ctrl.delExsistImg(index)" 
+      init-images="$ctrl.ob.images"></file-upload>
+     
+    <md-card>    
+      <md-card-content>
+         <div layout="row" layout-align="space-between center">
+          <span>Position</span>
+          <md-select ng-model="$ctrl.manualPosition" placeholder="Position" class="md-no-underline" ng-change="$ctrl.posTypeChange($event)">
+            <md-option ng-value="true">Manual Map</md-option>
+            <md-option ng-value="false" ng-disabled="$ctrl.deviceHasGeo">Current Location</md-option>
+          </md-select>
+        </div>
+        <div ng-if="$ctrl.manualPosition">
+          <obs-map on-update="$ctrl.markerChange(lat, lng)" draggable="true" ob="$ctrl.ob"></obs-map>
+        </div>
+      </md-card-content>
+    </md-card>
     
-    <md-input-container class="md-block">
-      <label>Description</label>
-      <textarea ng-model="$ctrl.ob.decr" rows="1" md-select-on-focus></textarea>
-    </md-input-container>
-
-    <!--<input ng-model="$ctrl.images" type="file" multiple accept="image/*">-->
-    <file-upload model="$ctrl.images"></file-upload>
-
-    <div ng-if="$ctrl.manualPosition">
-      user device didnt access position <br>
-      TODO: manual position set
-    </div>
     
-    <div>
-      <md-button class="md-primary md-raised" type="submit">Submit</md-button>
-    </div>
-    <pre>{{$ctrl.ob | json}}</pre>
-    <pre>{{$ctrl.images | json}}</pre>
-    <pre>{{$ctrl.manualPosition | json}}</pre>
+    <md-divider style="margin:30px 0;"></md-divider>
+    
+    <md-card>    
+      <md-card-content>
+         <div layout="row" layout-align="space-between center">
+          <span>Publish</span>
+          <md-button class="md-primary md-raised" type="submit">Submit</md-button>
+        </div>
+      </md-card-content>
+    </md-card>
+      
+    <!--<pre>{{$ctrl.ob | json}}</pre>-->
+    <!--<pre>{{$ctrl.manualPosition | json}}</pre>-->
   </form>
-  </md-content>
+</md-content>
+
+<style>    
+md-input-container {
+  margin-bottom: 0;
+}
+</style>

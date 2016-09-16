@@ -1,15 +1,95 @@
 (function(angular){
+  const ctrl = function( $scope, $element, $timeout ) {
+    
+    var ctrl = this;
+    
+    var files = [];
+    ctrl.images = [];
+    ctrl.loading = false;
+    ctrl.loadingParts = 0;
+    ctrl.loadingState = 0;
+ 
+
+    function _readImage(file) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        // console.log(e);
+                  
+        $scope.$apply(function () {
+          ctrl.images.push({src: e.target.result, file: file});
+          ctrl.loadingState = ctrl.loadingState + ( 100 /  ctrl.loadingParts );
+          if(ctrl.loadingState >0 === 100) {
+            ctrl.loading = false;
+          }
+        });
+      };
+
+
+      reader.readAsDataURL(file);
+
+    }
+
+    function _change() { 
+
+      if (this.files && this.files[0]) {          
+        ctrl.loading = true;
+        ctrl.loadingParts = this.files.length;
+        for(var i=0; i < this.files.length; i++) {
+          _readImage(this.files[i]);
+        }
+      }
+      files.push(...this.files);
+      ctrl.onChange({files});
+    }
+
+    ctrl.delImag = function(index) {
+      this.images.splice(index, 1);
+      files.splice(index,1);
+      ctrl.onChange({files});
+    }
+
+    ctrl.delExsistImg = function(index, image) {
+      ctrl.onDelExsist({index});
+    }
+
+    this.test = function() {
+      console.log(this.images);
+    }
+
+    this.open = function() {        
+      $element.find('input')[0].click();
+    }
+
+    this.$onInit = function() {
+      $element.find('input').bind("change", _change);
+    }
+
+    this.$onChanges = function (changesObj) {
+      if (changesObj.initImages && changesObj.initImages.currentValue) {
+        
+      console.log(changesObj.initImages);
+      }
+    }
+  };
 
   angular.module('cityBugs').component('fileUpload', {
+    
+    bindings: {
+      onChange    : '&',
+      onDelExsist : '&',
+      initImages  : '<'
+    },
+    controller: ctrl,
     template: ` 
     <style>
-      file-upload .container{
-        border: 1px solid;
-        padding: 20px;
+      file-upload .container {
         position: relative;
       }
       file-upload .images {
         display: inline-block;
+        border: 1px solid #efefef;
+        box-shadow: 1px 1px 1px #efefef
       }
       file-upload .images > div {
         position: relative;          
@@ -29,86 +109,36 @@
         }
     </style>
 
-    <div class="container">
-      <input class="hide" type="file" ng-model="$ctrl.file" multiple accept="image/*">
-      
-      <md-button class="md-raised md-primary" ng-click="$ctrl.open()">Choose</md-button>
-      <md-button class="md-raised md-warn" ng-click="$ctrl.test()">Choose</md-button>
- 
-      <md-progress-linear md-mode="determinate" ng-show="$ctrl.loading" value="{{$ctrl.loadingState}}"></md-progress-linear>
-
-      <div class="images">
-        <div ng-repeat="image in $ctrl.images">
-          <img ng-src="{{image.src}}">    
-          <md-button class="md-icon-button md-raised md-primary" ng-click="$ctrl.delImag($index, image)" aria-label="toggle"><md-icon>clear</md-icon></md-button>
+    <input class="hide" type="file" ng-model="$ctrl.file" multiple accept="image/*">
+    <md-card>    
+      <md-card-content>
+         <div layout="row" layout-align="space-between center">
+          <span>Images</span>
+          <md-button class="md-raised md-warn" ng-click="$ctrl.open()">images</md-button>    
         </div>
-      </div>
-    </div>
-      
-      `,
-    bindings: {model: '='},
-    controller: function( $scope, $element, $timeout ) {
-      
-      var ctrl = this;
-      
-      ctrl.images = [];
-      ctrl.loading = false;
-      ctrl.loadingParts = 0;
-      ctrl.loadingState = 0;
 
-      ctrl.model = ctrl.images;
+        <div layout="column" layout-align="space-between center">
+          
+          <div class="images">
+            <div ng-repeat="image in $ctrl.images">
+              <img ng-src="{{image.src}}">    
+              <md-button class="md-icon-button md-raised md-primary" ng-click="$ctrl.delImag($index, image)" aria-label="toggle"><md-icon>clear</md-icon></md-button>
+            </div>
+          </div>
 
-      function _readImage(file) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-          // console.log(e);
-                    
-          $scope.$apply(function () {
-            ctrl.images.push({src: e.target.result, file: file});
-            ctrl.loadingState = ctrl.loadingState + ( 100 /  ctrl.loadingParts );
-            if(ctrl.loadingState >0 === 100) {
-              ctrl.loading = false;
-            }
-          });
-        };
-
-
-        reader.readAsDataURL(file);
-
-      }
-
-      function _change() { 
-
-        if (this.files && this.files[0]) {          
-          ctrl.loading = true;
-          ctrl.loadingParts = this.files.length;
-          for(var i=0; i < this.files.length; i++) {
-            _readImage(this.files[i]);
-          }
-        }
-      }
-
-      ctrl.delImag = function(index, image) {
-        // alert("asd");
-        // console.log(index, image);
-        // this.images[index];
-        this.images.splice(index, 1);
-      }
-
-      this.test = function() {
-        console.log(this.images);
-      }
-
-      this.open = function() {        
-        $element.find('input')[0].click();
-        // console.log( $element.find('input'));
-      }
-
-      this.$onInit = function() {
-        $element.find('input').bind("change", _change);
-      }
-    }
+          <div ng-if="$ctrl.initImages">            
+            <h3>Exsisting Images</h3>
+            <div class="images">
+              <div ng-repeat="image in $ctrl.initImages">
+                <img ng-src="{{image}}">    
+                <md-button class="md-icon-button md-raised md-primary" ng-click="$ctrl.delExsistImg($index, image)" aria-label="toggle"><md-icon>clear</md-icon></md-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </md-card-content>
+    </md-card>      
+      `
   }); 
 
 })(window.angular);

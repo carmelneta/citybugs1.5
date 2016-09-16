@@ -1,90 +1,68 @@
-var myModule = angular.module('cityBugs')
-.factory('obsService', function($firebaseObject, Auth, UserService, $firebaseArray, $q) {
-  
-  const actions = {
-
-    getOb: function(obId) {
-      var ref = firebase.database().ref().child('obs').child( obId );
-      
-      return $firebaseObject( ref );
-    },
+(function(angular){
+  var myModule = angular.module('cityBugs')
+  .factory('obsService', function($firebaseObject, Auth, UserService, $firebaseArray, $q) {
     
-    mark: function (obId) {
-      console.log('Marking: ', obId);
-      
-      
-      var ref = firebase.database().ref()
-        .child('obs/'+ obId +'/marks')
+    const actions = {
 
-      
-      var obj = $firebaseObject(ref);
-      console.log(obj);
-      if( obj[Auth.$getAuth().uid] ) {
-        // obj  = null;
-        // delete obj[Auth.$getAuth().uid];
-        obj[Auth.$getAuth().uid] = null;
-      }else {
-         obj[Auth.$getAuth().uid]  = 'carmel';
-      }
-      obj.$save();
-      return;
-
-      obj.$loaded().then(function(data) {
-        isMarked = typeof data[Auth.$getAuth().uid] !== 'undefined';
+      getOb: function(obId) {
+        var ref = firebase.database().ref().child('obs').child( obId );
         
-        console.log(data, isMarked);
-        if(isMarked) {
-          obj[Auth.$getAuth().uid] = null;
-        }else {
-          obj[Auth.$getAuth().uid] = 'carmel';
-        }
+        return $firebaseObject( ref );
+      },
+      
+      mark: function (obId) {
+        // console.log('Marking: ', obId);
+        var user = Auth.$getAuth();
 
-        obj.$save();
-      });
+        this.isObMarkedByUser(obId).then(function(results) {
+          //console.log(results);
 
-      return;
+          if(results.isMarkerd) {
+            //  Remove Mark
+            results.obj.$remove();
+            UserService.removeMark(obId);
+          }else {          
+            //  Add Mark 
+            results.obj[Auth.$getAuth().uid] = {username: user.displayName ? user.displayName : user.email};
+            UserService.addMark(obId);
+          }
 
-      this.isObMarkedByUser(obId).then( results => {
-        console.log(results); 
-        if(!results.isMarkerd) {
-          //  Set mark on
-          console.log("asd");
-          results.obj[Auth.$getAuth().uid] = 'carmel';
           results.obj.$save();
+        });
+    
+      },
 
-          return;
-          var marks = $firebaseArray(ref);
-          marks.$add({ 
-            username: 'carmel',
-            uid:   Auth.$getAuth().uid
-          });          
-
-        }else {
-          //  Set Mark Of
-          results.obj.$remove();
+      isObMarkedByUser: function(obId) { 
+        // console.log('Checking if marked: ', obId, Auth.$getAuth());
+        
+        var deferred = $q.defer();
+        var auth = Auth.$getAuth();
+        if(!auth) {
+          deferred.reject();
+          return deferred.promise;
         }
-      }); 
-    },
+        var ref = firebase.database().ref()
+          .child('obs/'+ obId +'/marks')
+          .orderByKey()
+          .equalTo( Auth.$getAuth().uid )
+          .limitToFirst(1);
 
-    isObMarkedByUser: function(obId) {
-       console.log(obId);
-      var deferred = $q.defer();
+        var obj = $firebaseObject(ref);
 
-      var ref = firebase.database().ref()
-        .child('obs/'+ obId +'/marks')
-        .orderByChild('uid')
-        .equalTo( Auth.$getAuth().uid )
-        .limitToFirst(1);
+        obj.$loaded().then(data => deferred.resolve({
+          isMarkerd: data.$value !== null,
+          obj: obj
+        }));
+              
+        return deferred.promise;
+      },
 
-      var obj = $firebaseObject(ref);
-      obj.$loaded().then(data => deferred.resolve({
-        isMarkerd: data.$value !== null,
-        obj: obj
-      }));
-            
-      return deferred.promise;
-    }
-  }   
-  
-  return actions;
-});
+      isObOwnByCurrent: ob => {
+        var auth = Auth.$getAuth();
+        return auth && auth.uid === ob.uid;
+      }
+    }   
+    
+    return actions;
+  });
+})(window.angular);

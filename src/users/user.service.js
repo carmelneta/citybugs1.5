@@ -1,22 +1,34 @@
 var myModule = angular.module('cityBugs')
  
-.factory("Auth", function($firebaseAuth) {
-  return $firebaseAuth();
-})
+.factory("Auth", $firebaseAuth => $firebaseAuth() )
 
 
 .factory("UserService", function(Auth, $firebaseObject, $firebaseArray) {
 
   const actions = {
-    addMarked: function(obId) {
-      var ref = firebase.database().ref().child('users').child(Auth.$getAuth().uid ).child('marked');
-
-      // var userOb = $firebaseObject( ref );
+    
+    addMark: function(obId) {
+      var ref = firebase.database().ref()
+        .child('users')
+        .child(Auth.$getAuth().uid )
+        .child('marks')      
+        .child(obId);
+      ;      
       
-      // var list = $firebaseArray(ref).$add(obId);
-      // console.log(obId);    
-      // console.log(ref);    
-      // console.log(list);    
+      var obj = $firebaseObject(ref); 
+      obj.added = firebase.database.ServerValue.TIMESTAMP;
+      obj.$save();
+    },
+
+    removeMark: function(obId) {
+      var ref = firebase.database().ref()
+        .child('users')
+        .child(Auth.$getAuth().uid )
+        .child('marks')      
+        .child(obId);
+      ;      
+      
+      $firebaseObject(ref).$remove();      
     }
   }
 
