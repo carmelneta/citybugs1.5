@@ -1,0 +1,29 @@
+<md-card>
+  <ob-image ob="$ctrl.ob"></ob-image>
+  <md-card-title>
+    <md-card-title-text>
+      <span class="md-headline">{{$ctrl.ob.title ? $ctrl.ob.title : 'title' }}</span>
+    </md-card-title-text>
+  </md-card-title>
+  <md-card-actions layout="row" layout-align="start center">     
+    
+    <md-button class="md-icon-button" ng-class="{'md-primary' : $ctrl.obMarkByUser}" aria-label="bookmark" ng-click="$ctrl.mark()">
+      <md-icon>bookmark</md-icon>
+    </md-button>
+
+    <a ui-sref="main.obs.view({obId: $ctrl.ob.$id})">
+      <md-button class="md-icon-button" aria-label="View"><md-icon>forward</md-icon></md-button>
+    </a>
+
+
+    <span ng-show="$ctrl.moreActions">
+      <a ng-show="$ctrl.ownByCurrent" ui-sref="main.obs.edit({obId: $ctrl.ob.$id})">
+        <md-button class="md-icon-button" aria-label="View"><md-icon>edit</md-icon></md-button>
+      </a>      
+    </span>
+
+  </md-card-actions>
+  <md-card-content>
+    <p>{{$ctrl.ob.decr}}</p>
+  </md-card-content>
+</md-card>

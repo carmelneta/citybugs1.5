@@ -1,0 +1,80 @@
+<!doctype html>
+<html ng-app="cityBugs" ng-strict-di>
+  <head>
+    <meta charset="utf-8">
+    <title>CityBugs1.5</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- build:css({.tmp/serve,src}) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- run `gulp inject` to automatically populate bower styles dependencies -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css({.tmp/serve,src}) styles/app.css -->
+    <!-- inject:css -->
+    <!-- css files will be automatically insert here -->
+    <!-- endinject -->
+    <!-- endbuild -->
+  </head>
+  <body>
+
+    <div ui-view></div>
+
+    <!-- build:js(src) scripts/vendor.js -->
+    <!-- bower:js -->
+    <!-- run `gulp inject` to automatically populate bower script dependencies -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <script src="//npmcdn.com/angular-ui-router@1.0.0-alpha.4/release/angular-ui-router.js"></script>
+       <script>
+        var googleMaps = {
+          ready   : false,
+          resolver: {
+            map: ['$q', function($q) {
+              if (!googleMaps.deferred) {
+                  googleMaps.deferred = $q.defer();
+              }
+              if (googleMaps.ready) {
+                  googleMaps.deferred.resolve();
+              }
+              return googleMaps.deferred.promise;
+            }]
+          }
+      };
+
+      window.gMapReady = function () {
+        googleMaps.ready = true;
+        if (googleMaps.deferred) {
+          googleMaps.deferred.resolve();
+        }
+      };
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwi5HwsmgdaWS-i5ozjPmOBUPHM4Vi1l0&callback=gMapReady"></script>
+    <script>
+      
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyCfswrgYqcAVVCwx5WWjwWzko5sMooCgSw",
+        authDomain: "citybugs-7737e.firebaseapp.com",
+        databaseURL: "https://citybugs-7737e.firebaseio.com",
+        storageBucket: "citybugs-7737e.appspot.com",
+      };
+      firebase.initializeApp(config);
+    </script>
+
+    <!-- build:js({.tmp/serve,.tmp/partials}) scripts/app.js -->
+    <!-- inject:js -->
+    <!-- js files will be automatically insert here -->
+    <!-- endinject -->
+
+    <!-- inject:partials -->
+    <!-- angular templates will be automatically converted in js and inserted here -->
+    <!-- endinject -->
+    <!-- endbuild -->
+
+  </body>
+</html>
