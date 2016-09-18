@@ -1,6 +1,6 @@
 <md-toolbar class="md-warn">
   <div class="md-toolbar-tools">
-    <h2 class="md-flex">Create New Ob</h2>
+    <h2 class="md-flex">Create New Ob</h2>    
   </div>
 </md-toolbar>
 
@@ -10,11 +10,26 @@
     <md-card>    
       <md-card-content>
         <md-input-container>
-          <label>Title</label>
+          <label>What did you see?</label>
           <input ng-model="$ctrl.ob.title" required>
         </md-input-container>
+      </md-card-content>
+    </md-card>
+    
+    <file-upload 
+      on-change="$ctrl.imageChange(files)" 
+      on-del-exsist="$ctrl.delExsistImg(index)" 
+      init-images="$ctrl.ob.images">
+    </file-upload>
 
-        
+    <md-card ng-show="$ctrl.showExtra">    
+      <md-card-content>  
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Extra details</span>
+          </md-card-title-text>
+          <md-card-titlee-media>
+        </md-card-title>
         <md-input-container class="md-block">
           <label>Description</label>
           <textarea ng-model="$ctrl.ob.decr" rows="1" md-select-on-focus></textarea>
@@ -32,12 +47,8 @@
       </md-card-content>
     </md-card>    
 
-    <file-upload 
-      on-change="$ctrl.imageChange(files)" 
-      on-del-exsist="$ctrl.delExsistImg(index)" 
-      init-images="$ctrl.ob.images"></file-upload>
      
-    <md-card>    
+    <md-card ng-show="$ctrl.showExtra">    
       <md-card-content>
          <div layout="row" layout-align="space-between center">
           <span>Position</span>
@@ -53,6 +64,10 @@
     </md-card>
     
     
+    
+    <md-button class="md-raised md-warn" aria-label="Learn More" ng-click="$ctrl.showExtra = !$ctrl.showExtra">
+      Add Extra Details
+    </md-button>
     <md-divider style="margin:30px 0;"></md-divider>
     
     <md-card>    
@@ -64,7 +79,7 @@
       </md-card-content>
     </md-card>
       
-    <pre>{{$ctrl.ob | json}}</pre>
+    <!--<pre>{{$ctrl.ob | json}}</pre>-->
     <!--<pre>{{$ctrl.images | json}}</pre>-->
     <!--<pre>{{$ctrl.manualPosition | json}}</pre>-->
   </form>
@@ -73,5 +88,6 @@
 <style>    
 md-input-container {
   margin-bottom: 0;
+  width: 100%;
 }
 </style>

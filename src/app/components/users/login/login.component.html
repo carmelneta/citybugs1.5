@@ -4,8 +4,8 @@
   </div>
 </md-toolbar>
 
-<md-content class="md-padding" layout="row" layout-wrap> 
-  <form name="$ctrl.loginForm" novalidate> 
+<md-content class="md-padding" layout="column" layout-wrap> 
+  <form name="$ctrl.loginForm" novalidate flex> 
   
     <md-input-container class="md-block">
       <label>Email</label>
@@ -33,7 +33,7 @@
     <div ng-message="auth/email-already-in-use">This Email is already in use</div>
   </div>
 
-  <section layout="row" layout-sm="column" layout-align="space-around" layout-wrap> 
+  <section layout="row" layout-sm="column" layout-align="space-between"> 
     <md-button ng-click="$ctrl.login()" ng-disabled="!$ctrl.loginForm.$valid" class="md-raised md-primary">Login</md-button> 
     <md-button ng-click="$ctrl.join()"  ng-disabled="!$ctrl.loginForm.$valid" class="md-raised md-warn" >Join</md-button> 
     <md-progress-circular ng-show="$ctrl.loadin" class="md-accent" md-diameter="40"></md-progress-circular>

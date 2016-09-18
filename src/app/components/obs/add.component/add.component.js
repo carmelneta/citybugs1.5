@@ -11,6 +11,7 @@ class AddObCtrl {
     this._$mdBottomSheet = $mdBottomSheet;
     this._$mdToast = $mdToast;
     this._$q = $q;
+    this._$state = $state;
     
 
     this.images = [];
@@ -150,17 +151,10 @@ class AddObCtrl {
       this.$onInit();
     }
 
-    _doneModal() {
-       
-      this._$mdBottomSheet.show({
-        controllerAs: 'mo',
-        controller: $mdBottomSheet => {
-          'ngInject'; 
-          this.click = action => $mdBottomSheet.hide(action);          
-        },
-        
-        template: `
-          <md-bottom-sheet class="md-grid" layout="column">
+    _doneModal(template) {
+      var textTemplate = {
+       done : `
+        <md-bottom-sheet class="md-grid" layout="column">
           <div layout="row" layout-align="center center" ng-cloak>
             <h4>Loading Done! What next?</h4>
           </div>
@@ -180,12 +174,49 @@ class AddObCtrl {
 
           </section>
         </md-bottom-sheet>
+        `,
+        guest : `
+        <md-bottom-sheet class="md-grid" layout="column">
+          <div layout="row" layout-align="center center" ng-cloak>
+            <h4>Your issue saved.</h4>
+            <p>Register to follow up with it.</p>
+          </div>
+          <section layout="row" layout-sm="column" layout-align="space-between center" layout-wrap>
+            
+            <md-button class="md-primary md-raised" ng-click="mo.click('login')">
+                REGISTER
+            </md-button>
+
+            <md-button class="md-fab" ng-click="mo.click('view')">
+                <md-icon>forward</md-icon>
+            </md-button>
+
+            <md-button class="md-fab" ng-click="mo.click('main.home')">
+                <md-icon>home</md-icon>
+            </md-button>
+
+          </section>
+        </md-bottom-sheet>
         `
+      };
+
+      this._$mdBottomSheet.show({
+        controllerAs: 'mo',
+        controller: function($mdBottomSheet) {
+          'ngInject'; 
+          console.log(this);
+          this.click = action => {
+            console.log("Click");
+            $mdBottomSheet.hide(action);
+          };          
+        },
+        template: textTemplate[template]
       })
-      .then(function(action){
+      .then( action => {
         if(action === 'add') { this._reset() }
-        else if(action === 'view') { $state.go('obs.view', {obId: this.obObj.$id}); }
-        else if(action === 'home') { $state.go('home') }
+        else if(action === 'login') { this._$state.go('main.login'); }
+        else if(action === 'view') { this._$state.go('main.obs.view', {obId: this.obObj.$id}); }
+        else if(action === 'home') { this._$state.go('maon.home') }
       }); 
 
     }
@@ -204,18 +235,18 @@ class AddObCtrl {
       
       this.obObj.$value = this.ob;
       this.obObj.$save().then( 
-        ref => this._uploadFiles().then( () =>  this._doneModal() ),        
-        error => _showSimpleToast('Error Saving Ob')
+        ref => this._uploadFiles().then( () => this._doneModal( this._Auth.$getAuth() ? 'done' : 'guest' ) ),        
+        error => this._showSimpleToast('Error Saving Ob')
       );
 
 
     }
 
     $onInit() {
-      // console.log('Iniit', this);
-      
+      console.log( 'Add Ob component' );
+
       this.ob = {
-        uid: this._Auth.$getAuth().uid
+        uid: this._Auth.$getAuth() ? this._Auth.$getAuth().uid : 'guest'
       };
 
       //  Are we editing?

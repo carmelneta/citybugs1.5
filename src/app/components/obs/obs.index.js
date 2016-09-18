@@ -47,13 +47,7 @@ function obsRoutes ($stateProvider) {
   var addState = {
     name: 'main.obs.add',
     url: '/add',
-    component: 'obs.add.component',
-    resolve: {
-      currentAuth: Auth => {
-        'ngInject';
-        return Auth.$requireSignIn();
-      }
-    }
+    component: 'obs.add.component'
   };
 
   var markedObsState = {

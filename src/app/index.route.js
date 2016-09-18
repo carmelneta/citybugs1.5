@@ -10,7 +10,7 @@ export function routerConfig ($stateProvider, $urlRouterProvider) {
   const homeState = {
     name: 'main.home',
     url: '',
-    component: 'home.component',
+    component: 'pageHome',
     resolve: googleMaps.resolver
   }; 
 

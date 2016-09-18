@@ -3,9 +3,12 @@ import { routerConfig } from './index.route';
 import { runBlock } from './index.run';
 import { MainComponent } from './main/main.component';
 import { HomeComponent } from './components/home/home.component';
+import { UsersInit } from './components/users/users.index';
 import { UserServiceClass, Auth } from './components/users/user.service';
 import { LoginComponent } from './components/users/login/login.component';
 import { ObsInit, ObsComponent } from './components/obs/obs.index';
+
+
 
 //  Helpers
 import { FileUploadComponent } from './components/helper/file-upload.component';
@@ -28,10 +31,11 @@ app
 
   //  Main Views
   .component('main.component', MainComponent)
-  .component('home.component', HomeComponent)
+  .component('pageHome', HomeComponent)
   .component('login.component', LoginComponent)
 
 
   ;
 
 ObsInit(app);
+UsersInit(app);
