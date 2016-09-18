@@ -25,5 +25,5 @@ export function routerConfig ($stateProvider, $urlRouterProvider) {
   $stateProvider.state(homeState); 
   $stateProvider.state(loginState); 
 
-  $urlRouterProvider.otherwise('/');
+  // $urlRouterProvider.otherwise('/');
 }

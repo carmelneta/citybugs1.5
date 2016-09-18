@@ -15,12 +15,7 @@ function usersRoutes ($stateProvider) {
     name: 'main.users.profile',
     url: '/profile',
     component : 'userProfile',
-    resolve: {
-      currentAuth: Auth => {
-        'ngInject';
-        return Auth.$requireSignIn();
-      }
-    }
+    data: { requiresAuth: true }
   }
 
   $stateProvider.state(indexState); 

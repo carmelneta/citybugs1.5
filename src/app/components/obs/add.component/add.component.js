@@ -1,6 +1,6 @@
 class AddObCtrl {
   
-  constructor($firebaseObject, $firebaseArray, Auth, $timeout, $mdToast, ObsService, $mdBottomSheet, $state, $q) {
+  constructor($firebaseObject, $firebaseArray, Auth, $timeout, $mdToast, $mdDialog, ObsService, $mdBottomSheet, $state, $q) {
     'ngInject'; 
        
     this._Auth = Auth;
@@ -12,7 +12,7 @@ class AddObCtrl {
     this._$mdToast = $mdToast;
     this._$q = $q;
     this._$state = $state;
-    
+    this._$mdDialog = $mdDialog;
 
     this.images = [];
     this.obObj = {};
@@ -24,7 +24,7 @@ class AddObCtrl {
  
     _uploadFiles() {
       
-      console.log('Uploading', this.images);
+      // console.log('Uploading', this.images);
       var deferred = this._$q.defer();
 
       if(!this.images.length) { 
@@ -73,7 +73,7 @@ class AddObCtrl {
       // Create a reference to 'mountains.jpg'
       var fielsRef = storageRef
         .child('images')
-        .child( this._Auth.$getAuth().uid )
+        .child( this._Auth.$getAuth() ? this._Auth.$getAuth().uid : 'guest' )
         .child( this.obObj.$id );
 
         // console.log(images);
@@ -204,11 +204,7 @@ class AddObCtrl {
         controllerAs: 'mo',
         controller: function($mdBottomSheet) {
           'ngInject'; 
-          console.log(this);
-          this.click = action => {
-            console.log("Click");
-            $mdBottomSheet.hide(action);
-          };          
+          this.click = action => $mdBottomSheet.hide(action);          
         },
         template: textTemplate[template]
       })
@@ -230,7 +226,24 @@ class AddObCtrl {
           .hideDelay(3000)
       );
     }
-     
+    useImageLocation(position) {
+      // console.log(position, this.ob);
+ 
+      var confirm = this._$mdDialog.confirm()
+            .title('Use image tagged location?')
+            .textContent('This image has location tags strored in it, would you like to add it to the report?')
+            .ariaLabel('Lucky day')
+            // .targetEvent(ev)
+            .ok('Please do it!')
+            .cancel('NO');
+
+      this._$mdDialog.show(confirm).then( () => {
+        this.ob.latitude = position.lat;
+        this.ob.longitude = position.lng;        
+      } ); 
+
+
+    }
     submit() {
       
       this.obObj.$value = this.ob;

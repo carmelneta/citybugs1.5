@@ -19,14 +19,40 @@ class UploadCtrl {
   _readImage(file) {
     var reader = new FileReader();
 
-    reader.onload = (e) => {                
-      this._$timeout( () => {
-        this.images.push({src: e.target.result, file: file});
-        this.loadingState = this.loadingState + ( 100 /  this.loadingParts );        
-      })
+    reader.onload = (e) => {
+
+      var _file = {
+        src: e.target.result, 
+        file: file
+      }
+
+       // get EXIF data
+        EXIF.getData(file, () => {
+          if(file.exifdata.GPSLatitude && file.exifdata.GPSLongitude) {
+              var lat = file.exifdata.GPSLatitude;
+              var lon = file.exifdata.GPSLongitude; 
+              //Convert coordinates to WGS84 decimal
+              var latRef = file.exifdata.GPSLatitudeRef || "N";  
+              var lonRef = file.exifdata.GPSLongitudeRef || "W";  
+              _file.position = {
+                lat : (lat[0] + lat[1]/60 + lat[2]/3600) * (latRef == "N" ? 1 : -1),  
+                lng : (lon[0] + lon[1]/60 + lon[2]/3600) * (lonRef == "W" ? -1 : 1)
+              }
+          }
+
+          this._$timeout( () => {
+            this.images.push(_file);
+            this.loadingState = this.loadingState + ( 100 /  this.loadingParts );        
+          });
+
+          // console.log(_file);
+
+        }); 
+
     };
 
     reader.readAsDataURL(file);
+ 
 
   }
 
@@ -52,7 +78,9 @@ class UploadCtrl {
   delExsistImg(index, image) {
     this.onDelExsist({index});
   }
-
+  useLocation($index, image) {
+    this.onUseLocation({position: image.position});
+  }
   test() {
     console.log(this.images);
   }
@@ -63,6 +91,9 @@ class UploadCtrl {
 
   $onInit() {
     this._$element.find('input').bind("change", e => this._change(e));
+
+    if(!this.label) { this.label = 'Images'; }
+    if(!this.btntext) { this.btntext = 'Images'; }
   } 
 }
 
@@ -70,7 +101,10 @@ export const FileUploadComponent = {
    bindings: {
       onChange    : '&',
       onDelExsist : '&',
-      initImages  : '<'
+      initImages  : '<',
+      label       : '<',
+      btntext     : '<',
+      onUseLocation : '&'
     },
     controller: UploadCtrl,
     template: ` 
@@ -88,25 +122,34 @@ export const FileUploadComponent = {
         max-width: 33.3%;
         margin: 10px; 
         float: left;
-        }
-        file-upload .images button{
-          position: absolute;
-          margin: 0;
+      }
+      
+      file-upload .images button{
+        position: absolute;
+        margin: 0;
         padding: 0;
         top: -15px;
         right: -15px;
-        }
-        file-upload .images img {
-          max-width: 100%;
-        }
+      }
+
+      file-upload .images button.location {
+        top: auto;
+        bottom: 0;
+      }
+
+      file-upload .images img {
+        max-width: 100%;
+      }
     </style>
 
     <input class="hide" type="file" ng-model="$ctrl.file" multiple accept="image/*">
     <md-card>    
       <md-card-content>
          <div layout="row" layout-align="space-between center">
-          <span>Images</span>
-          <md-button class="md-raised md-warn" ng-click="$ctrl.open()">images</md-button>    
+          <span>{{$ctrl.label}}</span>
+          <md-button class="md-raised md-warn" ng-click="$ctrl.open()">
+            {{$ctrl.btntext}}
+          </md-button>    
         </div>
 
         <div layout="column" layout-align="space-between center">
@@ -115,6 +158,7 @@ export const FileUploadComponent = {
             <div ng-repeat="image in $ctrl.images">
               <img ng-src="{{image.src}}">    
               <md-button class="md-icon-button md-raised md-primary" ng-click="$ctrl.delImag($index, image)" aria-label="toggle"><md-icon>clear</md-icon></md-button>
+              <md-button ng-if="image.position" class="location md-icon-button md-raised md-primary" ng-click="$ctrl.useLocation($index, image)" aria-label="Use Location"><md-icon>room</md-icon></md-button>
             </div>
           </div>
 

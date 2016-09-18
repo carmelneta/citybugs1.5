@@ -3,13 +3,14 @@ class HomeCtrl {
     'ngInject';
     
     // console.log('Home Compoennet');
-
     this._$firebaseArray = $firebaseArray;
   }
 
   $onInit() {
     var ref = firebase.database().ref().child("obs").limitToLast(10);    
     this.obs = this._$firebaseArray(ref); 
+
+    
   }
   
 }
