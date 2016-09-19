@@ -20,6 +20,7 @@
       <a ng-show="$ctrl.ownByCurrent" ui-sref="main.obs.edit({obId: $ctrl.ob.$id})">
         <md-button class="md-icon-button" aria-label="View"><md-icon>edit</md-icon></md-button>
       </a>      
+      <md-button ng-show="$ctrl.ownByCurrent" class="md-icon-button" aria-label="Delete" ng-click="$ctrl.delete()"><md-icon>delete</md-icon></md-button>
     </span>
 
   </md-card-actions>

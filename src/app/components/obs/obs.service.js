@@ -1,10 +1,11 @@
-export class ObsServiceClass {
-  constructor($firebaseObject, Auth, UserService, $firebaseArray, $q) {
+export class ObsService {
+  constructor($firebaseObject, Auth, UserService, $firebaseArray, $q, GeoFireService) {
     'ngInject'; 
     this._$q = $q;
     this._$firebaseObject = $firebaseObject;
     this._Auth = Auth;
     this._UserService = UserService;
+    this._GeoFireService = GeoFireService;
   }
   
   getOb(obId) {
@@ -12,6 +13,28 @@ export class ObsServiceClass {
     return this._$firebaseObject( ref );
   }
 
+  //  Delete Ob, ob = $firebaseObject
+  delete(ob) {
+    
+    // console.log('Deleting: ', ob);
+
+    var deferred = this._$q.defer(); 
+    var obId = ob.$id;
+    if(this.isObOwnByCurrent(ob)) {
+      ob.$remove().then(
+        () => {
+          this._GeoFireService.delete(obId);
+          deferred.resolve();
+        },
+        error => deferred.reject(error),
+      )
+      
+    }else {
+      deferred.reject('Auth');
+    }
+          
+    return deferred.promise;
+  }
   
   mark(obId) {
     // console.log('Marking: ', obId);

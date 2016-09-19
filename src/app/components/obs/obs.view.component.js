@@ -18,13 +18,13 @@ class ObsViewCtrl {
           <h4>Errr, No results found...</h4>
         </div>
         <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-          <a ui-sref="obs.add">
+          <a ui-sref="main.obs.add">
             <md-button class="md-fab" aria-label="Eat cake">
                 <md-icon>add</md-icon>
             </md-button>
           </a>
 
-          <a ui-sref="home">
+          <a ui-sref="main.home">
             <md-button class="md-fab" aria-label="Eat cake">
                 <md-icon>home</md-icon>
             </md-button>
@@ -48,6 +48,10 @@ class ObsViewCtrl {
     });
   }
 
+  empty() {
+    this._openBottomSheet();
+  }
+
   $onDestroy() {
     this.ob.$destroy();
   };
@@ -56,7 +60,7 @@ class ObsViewCtrl {
 export const ObsViewComponent = {
   template : `
      <div ng-if="$ctrl.ready">
-        <ob-card ob="$ctrl.ob" more-actions="true"></ob-card>
+        <ob-card ob="$ctrl.ob" more-actions="true" on-empty="$ctrl.empty()"></ob-card>
         <obs-map ob="$ctrl.ob"></obs-map>
         <ob-comments ob-id="$ctrl.obId"></ob-comments>
       </div>

@@ -1,9 +1,12 @@
 import { ObsViewComponent } from './obs.view.component';
 import { ObImageClass } from './ob-image.component';
 import { ObsCardComponent } from './ob-card/ob-card.component';
-import { ObsService, ObsServiceClass } from './obs.service';
+import { ObsService } from './obs.service';
 import { AddObComponent, EditObComponent } from './add.component/add.component'
 import { MarkObsComponent } from './marked-obs.component';
+import { ObsNearComponent } from './obs.near.component';
+import { GeoFireService } from './geofire.service';
+
 
 function obsRoutes ($stateProvider) { 
   'ngInject';
@@ -86,10 +89,12 @@ export function ObsInit(app) {
   app
     .config(obsRoutes)
     .component('obs.index', ObsComponent) 
-    .service('ObsService', ObsServiceClass)
+    .service('ObsService', ObsService)
+    .service('GeoFireService', GeoFireService)
 
     .component('obImage', ObImageClass)
     .component('obCard', ObsCardComponent)
+    .component('obsNear', ObsNearComponent)
 
     .component('obs.view.component', ObsViewComponent)
     .component('obs.add.component', AddObComponent)

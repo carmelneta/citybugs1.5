@@ -1,10 +1,10 @@
 export const ObImageClass = {
-  template: '<img ng-src="{{$ctrl.imgSrc}}" class="ob-image">',
+  template: '<img ng-src="{{$ctrl.imgSrc}}" class="ob-image" ng-class="$ctrl.imgClass">',
   bindings: {
-    ob : '<'
+    ob : '<',
+    imgClass : '<'
   },
   controller: function() {
-    
     if(this.ob.images){
       this.imgSrc = this.ob.images[ Object.keys( this.ob.images )[0] ];      
     }else {

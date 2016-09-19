@@ -30,7 +30,27 @@ class ObMapCtrl {
     };
 
     const initWithMultiOb = () => {};
-            
+    
+    const addMarker = () => {
+
+      var markers = [];
+      for(var i=0; i < this.obs.length; i++) { 
+        if(!this.obs[i].latitude || !this.obs[i].longitude) { continue; }
+
+        markerOptions.position = {
+          lat: this.obs[i].latitude,
+          lng: this.obs[i].longitude
+        }
+        markerOptions.title = this.obs[i].title;
+        markers.push( new google.maps.Marker( Object.assign( {map}, markerOptions ) ));
+      }
+
+      if(markers[0]) {
+        map.setCenter( markers[0].getPosition() );
+      }
+
+    }
+
     if(this.ob) { initWithOb(); }
     else if(this.obs) { initWithMultiOb(); }
 
@@ -57,25 +77,10 @@ class ObMapCtrl {
         });
 
       }else if(this.obs) {
-        this.obs.$loaded().then( () => {
-
-          var markers = [];
-
-          for(var i=0; i < this.obs.length; i++) { 
-
-            if(!this.obs[i].latitude || !this.obs[i].longitude) { continue; }
-
-            markerOptions.position = {
-              lat: this.obs[i].latitude,
-              lng: this.obs[i].longitude
-            }
-            markerOptions.title = this.obs[i].title;
-            markers.push( new google.maps.Marker( Object.assign( {map}, markerOptions ) ));
-          }
-
-          map.setCenter( markers[0].getPosition() );
-
-        });
+        this.obs.$loaded().then( () => addMarker());
+      }else if(this.obsArray) {
+        this.obs = this.obsArray;
+        addMarker();
       }
     }
 
@@ -93,6 +98,7 @@ export const ObsMapComponent = {
     lng: '<',      
     ob: '<',
     obs: '<',
+    obsArray: '<',  //  Array obs FirebaseObject, loaded
     draggable: '<',
     onUpdate: '&'
   },

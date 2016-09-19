@@ -7,6 +7,7 @@ class ObsCardController {
     this.ownByCurrent = false; 
 
   }
+
   _setListners() {
 
     //  Listen for marked changes
@@ -24,6 +25,16 @@ class ObsCardController {
     this.ownByCurrent = this._ObsService.isObOwnByCurrent(this.ob);
 
   }
+
+  //  Delete Ob
+  delete(){
+    console.log(this.ob);
+    this._ObsService.delete(this.ob).then(
+      () => this.onEmpty(),
+      error => console.log(error)
+    );
+  }
+
   //  Mark Toggle 
   mark() {
     this._ObsService.mark(this.ob.$id);
@@ -35,7 +46,7 @@ class ObsCardController {
     if(!this.ob) {
       this.ob = this._ObsService.getOb( this.obId );
       this.ob.$loaded().then(x => {
-        if(x.$value === null) { $timeout( () => this.onEmpty() ); }
+        if(x.$value === null) { this.onEmpty(); }
       });
     }
     

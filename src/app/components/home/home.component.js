@@ -1,16 +1,15 @@
 class HomeCtrl {
-  constructor ( $firebaseArray ) {
+  constructor ( $firebaseArray, $firebaseObject ) {
     'ngInject';
     
     // console.log('Home Compoennet');
     this._$firebaseArray = $firebaseArray;
+    this._$firebaseObject = $firebaseObject;
   }
 
   $onInit() {
     var ref = firebase.database().ref().child("obs").limitToLast(10);    
-    this.obs = this._$firebaseArray(ref); 
-
-    
+    this.obs = this._$firebaseArray(ref);
   }
   
 }
@@ -22,26 +21,35 @@ export const HomeComponent = {
     <header layout  layout-align="center center">
       <h1 flex>Fixing OUR Cities.</h1>
     </header>
-    <div class="actions" layout  layout-align="center center">
-      <a ui-sref="main.obs.add">
-        <md-button class="md-primary md-raised">
-          Report a CityBug 
-          <md-icon>add</md-icon>
-        </md-button>
-      </a>
-    </div>
-    <obs-map obs="$ctrl.obs"></obs-map>
+    
+    <md-card-content class="actions">
+      <md-card>    
+        <div layout="row" layout-align="space-between center" class="md-padding">
+          <span>Take Action</span>
+          <a ui-sref="main.obs.add">
+            <md-button class="md-primary md-raised">
+              Report a CityBug             
+            </md-button>
+          </a>
+        </div>    
+      </md-card-content>
+    </md-card>    
+
+    <md-divider></md-divider>
+
+    <obs-near></obs-near>
+
+    <md-divider></md-divider>
+
     <md-content class="md-padding" layout="row" layout-wrap>
+      <h4>Reacent Observations</h4>
       <ob-card flex="50" ng-repeat="ob in $ctrl.obs" ob="ob"></ob-card>
     </md-content>
 
     <style>
-    page-home .actions {
-      min-height: 10vh;
-    }
     page-home header {
       background-image: url(assets/main.jpg);
-      min-height: 80vh;
+      min-height: 90vh;
       background-size: cover;
     }
 

@@ -226,6 +226,7 @@ class AddObCtrl {
           .hideDelay(3000)
       );
     }
+    
     useImageLocation(position) {
       // console.log(position, this.ob);
  
@@ -244,11 +245,33 @@ class AddObCtrl {
 
 
     }
+
     submit() {
+
+      const setObGeo = () => {
+        console.log(this.obObj.longitude, this.obObj.latitude);
+        if(!this.obObj.latitude || !this.obObj.longitude) {
+          return;
+        }
+        console.log('ddddd');
+
+        var geofireObsRef = firebase.database().ref().child("_geofireObs");
+        var geoFire = new GeoFire(geofireObsRef);
+        geoFire.set( this.obObj.$id, [ this.obObj.latitude , this.obObj.longitude]).then( 
+         null, 
+         error => console.log("Error: " + error)
+        );
+
+      };
       
       this.obObj.$value = this.ob;
       this.obObj.$save().then( 
-        ref => this._uploadFiles().then( () => this._doneModal( this._Auth.$getAuth() ? 'done' : 'guest' ) ),        
+        ref => {  //  Success
+          // console.log(ref, this.obObj);
+          this._uploadFiles().then( () => this._doneModal( this._Auth.$getAuth() ? 'done' : 'guest' ) );
+
+          setObGeo();
+        },        
         error => this._showSimpleToast('Error Saving Ob')
       );
 
