@@ -28,7 +28,7 @@ class Ctrl {
 
     //  Item Enter
     var onKeyEnteredRegistration = geoQuery.on("key_entered", (key, location, distance) => {
-      // console.log('Enter',key,location, distance);
+      console.log('Enter',key,location, distance);
       var obj = this._$firebaseObject(obsRef.child(key));
       obj.$loaded().then( (newOb) => {
         newOb.distance = distance;
@@ -73,7 +73,7 @@ class Ctrl {
 
   $onInit() {
     
-    this.radius = this.radius || 2000;
+    this.radius = this.radius || 2;
     this.view = this.view || 'list';
     this.getPosition().then(
       () => this.query(),
@@ -133,7 +133,7 @@ export const ObsNearComponent = {
             <ob-image ob="ob" img-class="'md-avatar'"></ob-image>
             <p>{{ ob.title }}</p>
 
-            <p class="distance">{{ob.distance * 0.001| number:1}}Km</p>
+            <p class="distance">{{ob.distance| number:0}}Km</p>
             
             <md-divider></md-divider>
           </md-list-item>
