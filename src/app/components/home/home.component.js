@@ -6,10 +6,11 @@ class HomeCtrl {
     this._$firebaseArray = $firebaseArray;
     this._$firebaseObject = $firebaseObject;
   }
-
+ 
   $onInit() {
     var ref = firebase.database().ref().child("obs").limitToLast(10);    
     this.obs = this._$firebaseArray(ref);
+
   }
   
 }
@@ -41,10 +42,17 @@ export const HomeComponent = {
 
     <md-divider></md-divider>
 
-    <md-content class="md-padding" layout="row" layout-wrap>
-      <h4>Reacent Observations</h4>
-      <ob-card flex="50" ng-repeat="ob in $ctrl.obs" ob="ob"></ob-card>
-    </md-content>
+    <div layout="column">
+      <md-toolbar class="">
+        <div class="md-toolbar-tools">
+          <h2 class="md-flex">Reacent Observations</h2>
+        </div>
+      </md-toolbar>
+
+      <md-content class="md-padding" layout="row" layout-wrap>
+        <ob-card flex="50" ng-repeat="ob in $ctrl.obs" ob="ob"></ob-card>
+      </md-content>
+    </div>
 
     <style>
     page-home header {
