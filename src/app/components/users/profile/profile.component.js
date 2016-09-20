@@ -1,11 +1,11 @@
 class ProfileCtrl {
-  constructor(Auth, $mdToast, $q) {
+  constructor(Auth, $mdToast, $q, $firebaseObject) {
     'ngInject'; 
 
     this._Auth = Auth;
     this._$mdToast = $mdToast;
     this._$q = $q;
-
+    this._$firebaseObject = $firebaseObject;
     this.fileChangeFlag = false;
   }
 
@@ -66,6 +66,16 @@ class ProfileCtrl {
     this.fileChangeFlag = true;
   }
 
+  delExsistImg(index) {
+    console.log(index);
+    this.userProfileObj.photoURL = null;
+    this.userProfileObj.$loaded().then(
+      x => {
+        this.userProfileObj.$save();
+      }
+    )
+  }
+
   submit() {
 
     const send = (imgUrl) => {
@@ -73,9 +83,22 @@ class ProfileCtrl {
         displayName : this.user.displayName
       }
 
-      if(this.fileChangeFlag && imgUrl) { profile.photoURL = imgUrl; }
+      if(this.fileChangeFlag && imgUrl) { this.userProfileObj.photoURL = imgUrl; }
 
-      this._Auth.$getAuth().updateProfile(profile);
+      var auth = this._Auth.$getAuth();
+      
+      // console.log(userProfileObj);
+
+      this.userProfileObj.displayName = this.user.displayName;
+      this.userProfileObj.$loaded().then(
+        x => {
+          this.userProfileObj.$save();
+        }
+      )
+          
+
+      auth.updateProfile(profile);
+      
 
       // console.log('Saveing Email', !this.form.email.$pristine);
       if( !this.form.email.$pristine ) {
@@ -143,6 +166,8 @@ class ProfileCtrl {
       password: ''
     };
 
+    this.userProfileObj = this._$firebaseObject( firebase.database().ref('users').child( auth.uid ) );
+ 
   } 
 
   $onDestroy() { 
@@ -188,7 +213,7 @@ export const UserProfileComponent = {
             btntext="'choose'"
             on-change="$ctrl.imageChange(files)" 
             on-del-exsist="$ctrl.delExsistImg(index)" 
-            init-images="$ctrl.user.photoURL">
+            init-images="$ctrl.userProfileObj.photoURL">
           </file-upload>
 
           <div layout="row" layout-align="end">

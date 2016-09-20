@@ -6,7 +6,7 @@ import { AddObComponent, EditObComponent } from './add.component/add.component'
 import { MarkObsComponent } from './marked-obs.component';
 import { ObsNearComponent } from './obs.near.component';
 import { GeoFireService } from './geofire.service';
-
+import { ObsCommentsComponent, ArrayWithSum } from './obs-comments';
 
 function obsRoutes ($stateProvider) { 
   'ngInject';
@@ -91,10 +91,12 @@ export function ObsInit(app) {
     .component('obs.index', ObsComponent) 
     .service('ObsService', ObsService)
     .service('GeoFireService', GeoFireService)
+    .factory('ArrayWithSumFactory', ArrayWithSum)
 
     .component('obImage', ObImageClass)
     .component('obCard', ObsCardComponent)
     .component('obsNear', ObsNearComponent)
+    .component('obComments', ObsCommentsComponent)
 
     .component('obs.view.component', ObsViewComponent)
     .component('obs.add.component', AddObComponent)

@@ -94,6 +94,13 @@ class UploadCtrl {
 
     if(!this.label) { this.label = 'Images'; }
     if(!this.btntext) { this.btntext = 'Images'; }
+
+  }
+
+  $onChanges(change) {    
+    if(typeof change.initImages.currentValue === 'string') {
+      this.initImages = [this.initImages]; 
+    }
   } 
 }
 

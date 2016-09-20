@@ -62,7 +62,7 @@ export const ObsViewComponent = {
      <div ng-if="$ctrl.ready">
         <ob-card ob="$ctrl.ob" more-actions="true" on-empty="$ctrl.empty()"></ob-card>
         <obs-map ob="$ctrl.ob"></obs-map>
-        <ob-comments ob-id="$ctrl.obId"></ob-comments>
+        <ob-comments ob="$ctrl.ob"></ob-comments>
       </div>
 
       <div ng-show="!$ctrl.ready">Loading</div>
