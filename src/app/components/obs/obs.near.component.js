@@ -28,7 +28,7 @@ class Ctrl {
 
     //  Item Enter
     var onKeyEnteredRegistration = geoQuery.on("key_entered", (key, location, distance) => {
-      console.log('Enter',key,location, distance);
+      //  console.log('Enter',key,location, distance);
       var obj = this._$firebaseObject(obsRef.child(key));
       obj.$loaded().then( (newOb) => {
         newOb.distance = distance;
